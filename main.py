@@ -220,7 +220,7 @@ D4_nacional_T1["Superior"] = 0
 D4_nacional_T1["Inferior"] = 0
 
 ######################################################################
-####            RENOMBRA COLUMNAS REGIONALES TABLA 1              ####
+####            RENOMBRA COLUMNAS NACIONALES TABLA 1              ####
 ######################################################################
 
 A1_nacional_T1 = A1_nacional_T1.rename(columns={"fecha": "fecha", "carga.lisup": "Superior","carga.liminf": "Inferior" ,"carga.estimada": "Estimado"})
