@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import io
 import os
+import time
 
 ######### FUNCIÓN PARA OBTENER LOS ARCHIVOS DEL REPO PRIVADO ICOVID DEL DATAGOV #########
 def github(url: str):
@@ -481,7 +482,7 @@ D2_regional.loc[D2_regional["Valor"] > 85, "cod_color"] = "4"
 #### REGIONAL
 frames_r_T1 = [A1_regional_T1, A2_regional_T1, B1_regional_T1, B2_regional_T1, C2_regional_T1, C3_regional_T1, C4_regional_T1, C5_regional_T1, D1_regional_T1, D2_regional_T1]
 result_regional_T1 = pd.concat(frames_r_T1, sort=True) #concatenamos en un solo gran dataframe
-result_regional_T1_dropped_cols = result_regional_T1[["Estimado", "Indicador", "Inferior", "Superior", "fecha"]] # Se eliminan las columnas r.liminf y r.lisup
+result_regional_T1_dropped_cols = result_regional_T1[["Estimado", "Indicador", "Inferior", "Superior", "cod_region", "fecha"]] # Se eliminan las columnas r.liminf y r.lisup
 result_regional_T1_final = result_regional_T1_dropped_cols.dropna()
 
 #### NACIONAL
@@ -494,13 +495,17 @@ result_nacional_T1_final = result_nacional_T1_dropped_cols.dropna()
 ####            GENERACIÓN ARCHIVOS .XLSX Y .CSV TABLA 1              ####
 ##########################################################################
 
+hoy = time.strftime("%Y%m%d%H%M%S") #guardamos la fecha de generación del archivo en formato YYYYMMDDhhmmss
+
 #### REGIONAL
-result_regional_T1_final.to_csv("regional_T1.csv", index=False)
-result_regional_T1_final.to_excel("regional_T1.xlsx", index=False, header=True)
+ruta_regional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/regional_T1_{hoy}.csv"
+result_regional_T1_final.to_csv(ruta_regional_T1, index=False)
+# result_regional_T1_final.to_excel("regional_T1.xlsx", index=False, header=True)
 
 #### NACIONAL
-result_nacional_T1_final.to_csv("nacional_T1.csv", index=False)
-result_nacional_T1_final.to_excel("nacional_T1.xlsx", index=False, header=True)
+ruta_nacional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/nacional_T1_{hoy}.csv"
+result_nacional_T1_final.to_csv(ruta_nacional_T1, index=False)
+# result_nacional_T1_final.to_excel("nacional_T1.xlsx", index=False, header=True)
 
 ##############################################################################
 ####            DATAFRAME QUE CONTIENE EL RESTO (NO TABLA 1)              ####
@@ -521,9 +526,11 @@ result_nacional_final = result_nacional.dropna() #we drop the NaN values
 ##################################################################
 
 #### REGIONAL
-result_regional_final.to_csv("regional.csv", index=False)
-result_regional_final.to_excel("regional.xlsx", index=False, header=True)
+ruta_regional = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/regional_{hoy}.csv"
+result_regional_final.to_csv(ruta_regional, index=False)
+# result_regional_final.to_excel("/home/pas/data-gob/python/icovid-scripts/archivos-resumen/regional.xlsx", index=False, header=True)
 
 #### NACIONAL
-result_nacional_final.to_csv("nacional.csv", index=False)
-result_nacional_final.to_excel("nacional.xlsx", index=False, header=True)
+ruta_nacional = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/nacional_{hoy}.csv"
+result_nacional_final.to_csv(ruta_nacional, index=False)
+# result_nacional_final.to_excel("/home/pas/data-gob/python/icovid-scripts/archivos-resumen/nacional.xlsx", index=False, header=True)
