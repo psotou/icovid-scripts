@@ -34,3 +34,7 @@ Primero hacer un git clone de este repo, y luego correr lo siguiente (para linux
 ```bash
 python3 step_two.py
 ```
+
+# TO DO
+
++ [ ] Hacer que los archivos generados se envíen de manera automática al google drive.
