@@ -1,28 +1,13 @@
-import pandas as pd 
-import requests
+import sys
+sys.path.append("pkg")
+
+from github_csv import github
+import pandas as pd
 import io
-import os
 import time
 
-######### FUNCIÓN PARA OBTENER LOS ARCHIVOS DEL REPO PRIVADO ICOVID DEL DATAGOV #########
-def github(url: str):
-    token = os.environ.get("GITHUB_DATAGOV_TOKEN")
-    try:
-        headers = {
-            "Authorization": f"token {token}",
-            "Accept": "application/vnd.github.v3.raw"}
-        return requests.get(url, headers=headers)
-
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-
-######### DIMENSIONES PERÍODOS E INDICADORES ##########
-
-dim_periodo_blob_sas_url: str = "https://icovid.blob.core.windows.net/resumen-output/dim_tiempo.csv?sp=r&st=2021-01-14T17:57:47Z&se=2022-12-02T01:57:47Z&spr=https&sv=2019-12-12&sr=b&sig=fN8Ew5rCIlLOZzH%2FInris6iZu8%2Baug0uGRmEivyQbUk%3D"
-dim_ind_blob_sas_url: str = "https://icovid.blob.core.windows.net/resumen-output/dim_indicadores.csv?sp=r&st=2021-01-14T18:04:35Z&se=2022-12-31T02:04:35Z&spr=https&sv=2019-12-12&sr=b&sig=8jQrn15GIBufjknaPFIfK09CHc9hoDvUVUw84IM0HKk%3D"
-
-df_periodo = pd.read_csv(dim_periodo_blob_sas_url, encoding="utf-8", sep=";")
-df_indicadores = pd.read_csv(dim_ind_blob_sas_url, encoding="latin-1", sep=";")
+import requests
+import os
 
 ################################################################
 ####                   RESUMEN NACIONAL                    ####
@@ -498,12 +483,12 @@ result_nacional_T1_final = result_nacional_T1_dropped_cols.dropna()
 hoy = time.strftime("%Y%m%d%H%M%S") #guardamos la fecha de generación del archivo en formato YYYYMMDDhhmmss
 
 #### REGIONAL
-ruta_regional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/regional_T1_{hoy}.csv"
+ruta_regional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/regional_T1_{hoy}.csv"
 result_regional_T1_final.to_csv(ruta_regional_T1, index=False)
 regional_T1_csv = f"regional_T1_{hoy}.csv"
 
 #### NACIONAL
-ruta_nacional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/nacional_T1_{hoy}.csv"
+ruta_nacional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/nacional_T1_{hoy}.csv"
 result_nacional_T1_final.to_csv(ruta_nacional_T1, index=False)
 nacional_T1_csv = f"nacional_T1_{hoy}.csv"
 
@@ -526,11 +511,11 @@ result_nacional_final = result_nacional.dropna() #we drop the NaN values
 ##################################################################
 
 #### REGIONAL
-ruta_regional = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/regional_{hoy}.csv"
+ruta_regional = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/regional_{hoy}.csv"
 result_regional_final.to_csv(ruta_regional, index=False)
 regional_csv = f"regional_{hoy}.csv"
 
 #### NACIONAL
-ruta_nacional = f"/home/pas/data-gob/python/icovid-scripts/archivos-resumen/nacional_{hoy}.csv"
+ruta_nacional = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/nacional_{hoy}.csv"
 result_nacional_final.to_csv(ruta_nacional, index=False)
 nacional_csv = f"nacional_{hoy}.csv"
