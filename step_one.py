@@ -480,17 +480,28 @@ result_nacional_T1_final = result_nacional_T1_dropped_cols.dropna()
 ####            GENERACIÓN ARCHIVOS .XLSX Y .CSV TABLA 1              ####
 ##########################################################################
 
+today = sys.argv[1]
 hoy = time.strftime("%Y%m%d%H%M%S") #guardamos la fecha de generación del archivo en formato YYYYMMDDhhmmss
+ruta_base = f"/home/pas/python/icovid-scripts/archivos-step-one/{today}/"
 
 #### REGIONAL
-ruta_regional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/regional_T1_{hoy}.csv"
+# ruta_regional_T1 = f"/home/pas/python/icovid-scripts/archivos-step-one/regional_T1_{hoy}.csv"
+ruta_regional_T1 = ruta_base + f"regional_T1_{hoy}.csv"
 result_regional_T1_final.to_csv(ruta_regional_T1, index=False)
-regional_T1_csv = f"regional_T1_{hoy}.csv"
+regional_T1_csv = f"regional_T1_{hoy}.csv" # se llama en step_two.py
 
 #### NACIONAL
-ruta_nacional_T1 = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/nacional_T1_{hoy}.csv"
+# ruta_nacional_T1 = f"/home/pas/python/icovid-scripts/archivos-step-one/nacional_T1_{hoy}.csv"
+ruta_nacional_T1 = ruta_base + f"nacional_T1_{hoy}.csv"
 result_nacional_T1_final.to_csv(ruta_nacional_T1, index=False)
-nacional_T1_csv = f"nacional_T1_{hoy}.csv"
+nacional_T1_csv = f"nacional_T1_{hoy}.csv" # se llama en step_two.py
+
+#### XLSX ####
+ruta_regional_excel_T1 = ruta_base + "regional_T1.xlsx"
+ruta_nacional_excel_T1 = ruta_base + "nacional_T1.xlsx"
+
+result_regional_T1_final.to_excel(ruta_regional_excel_T1, index=False)
+result_nacional_T1_final.to_excel(ruta_nacional_excel_T1, index=False)
 
 ##############################################################################
 ####            DATAFRAME QUE CONTIENE EL RESTO (NO TABLA 1)              ####
@@ -511,11 +522,20 @@ result_nacional_final = result_nacional.dropna() #we drop the NaN values
 ##################################################################
 
 #### REGIONAL
-ruta_regional = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/regional_{hoy}.csv"
+# ruta_regional = f"/home/pas/python/icovid-scripts/archivos-step-one/regional_{hoy}.csv"
+ruta_regional = ruta_base + f"regional_{hoy}.csv"
 result_regional_final.to_csv(ruta_regional, index=False)
 regional_csv = f"regional_{hoy}.csv"
 
 #### NACIONAL
-ruta_nacional = f"/home/pas/data-gob/python/icovid-scripts/archivos-step-one/nacional_{hoy}.csv"
+# ruta_nacional = f"/home/pas/python/icovid-scripts/archivos-step-one/nacional_{hoy}.csv"
+ruta_nacional = ruta_base + f"nacional_{hoy}.csv"
 result_nacional_final.to_csv(ruta_nacional, index=False)
 nacional_csv = f"nacional_{hoy}.csv"
+
+#### XLSX ####
+ruta_regional_excel = ruta_base + "regional.xlsx"
+ruta_nacional_excel = ruta_base + "nacional.xlsx"
+
+result_regional_final.to_excel(ruta_regional_excel, index=False)
+result_nacional_final.to_excel(ruta_nacional_excel, index=False)

@@ -14,9 +14,12 @@ import os
 #####      VARIABLES GLOBALES      #####
 ########################################
 
+today = sys.argv[1]
 hoy = time.strftime("%Y%m%d%H%M%S")     # guardamos la fecha de generación del archivo en formato YYYYMMDDhhmmss
-ruta_base = "/home/pas/data-gob/python/icovid-scripts/archivos-step-one/"
-ruta_base_paso2 = "/home/pas/data-gob/python/icovid-scripts/archivos-step-two/"
+# ruta_base = "/home/pas/python/icovid-scripts/archivos-step-one/"
+# ruta_base_paso2 = "/home/pas/python/icovid-scripts/archivos-step-two/"
+ruta_base = f"/home/pas/python/icovid-scripts/archivos-step-one/{today}/"
+ruta_base_paso2 = f"/home/pas/python/icovid-scripts/archivos-step-two/{today}/"
 
 ###############################################################################
 #####      GENERACIÓN DATAFRAME DE MAESTRO DIMENSIÓN TIEMPO/PERIODOS      #####
@@ -68,6 +71,10 @@ regional_T1_usefulcols_csv.to_csv(ruta_base_paso2 + f"regional_T1_paso2_{hoy}.cs
 regional_T1_mean_csv = regional_T1_mean.dropna()                                                        # just in case
 regional_T1_mean_csv.to_csv(ruta_base_paso2 + f"regional_T1_paso2_promedio_{hoy}.csv", index=False)
 
+#### XLSX ####
+regional_T1_usefulcols_csv.to_excel(ruta_base_paso2 + "Tabla1_regional.xlsx", index=False)
+regional_T1_mean_csv.to_excel(ruta_base_paso2 + "Tabla1_regional_prom.xlsx", index=False)
+
 ########## NACIONAL ##########
 nacional_T1_merged = nacional_T1.merge(dim_periodos, how="left", on="fecha")
 nacional_T1_usefulcols = nacional_T1_merged[["fecha", "Estimado", "Indicador", "Inferior", "Superior", "Domingo_semana"]]                                                       # dejamos las columnas que nos interesan
@@ -79,6 +86,10 @@ nacional_T1_usefulcols_csv.to_csv(ruta_base_paso2 + f"nacional_T1_paso2_{hoy}.cs
 
 nacional_T1_mean_csv = nacional_T1_mean.dropna()                                                        # just in case
 nacional_T1_mean_csv.to_csv(ruta_base_paso2 + f"nacional_T1_paso2_promedio_{hoy}.csv", index=False)
+
+#### XLSX ####
+nacional_T1_usefulcols_csv.to_excel(ruta_base_paso2 + "Tabla1_nacional.xlsx", index=False)
+nacional_T1_mean_csv.to_excel(ruta_base_paso2 + "Tabla1_nacional_prom.xlsx", index=False)
 
 ###########################################################################################
 #####      CRUCE PARA CALCULAR LOS PROMEDIOS DE LA DATA GENERADA PARA LA TABLA 2      #####
@@ -154,6 +165,9 @@ regional_T2_mean.loc[(regional_T2_mean["Valor"] > 85) & (regional_T2_mean["Indic
 
 ##########      EXPORTAMOS A .CSV     ##########
 regional_T2_mean.to_csv(ruta_base_paso2 + f"regional_T2_paso2_promedio_{hoy}.csv", index=False)
+
+####  XLSX ####
+regional_T2_mean.to_excel(ruta_base_paso2 + "tabla2_regional.xlsx", index=False)
 
 ######################################
 #####      TABLA 2 NACIONAL      #####
@@ -235,6 +249,9 @@ nacional_T2_mean.loc[(nacional_T2_mean["Valor"] >= 20) & (nacional_T2_mean["Indi
 ##########      EXPORTAMOS A .CSV     ##########
 nacional_T2_mean.to_csv(ruta_base_paso2 + f"nacional_T2_paso2_promedio_{hoy}.csv", index=False)
 
+#### XLSX ####
+nacional_T2_mean.to_excel(ruta_base_paso2 + "tabla2_nacional.xlsx", index=False)
+
 ##########################################################
 #####      PROMEDIO DE CARGA NACIONAL Y REGIONAL     #####
 ##########################################################
@@ -282,7 +299,7 @@ TT22_prom_domingo_nacional_ant = TT22.groupby("Domingo_semana_siguiente").mean()
 TT3_prom_domingo_nacional = TT11_prom_domingo_nacional.subtract(TT22_prom_domingo_nacional_ant, axis="columns", fill_value=0)
 
 #### Cálculo de cuantiles
-TT3_prom_col_domingo_nacional = TT3_prom_domingo_nacional.mean(axis="columns").round(1)                       # Promedio del promedio
+TT3_prom_col_domingo_nacional = TT3_prom_domingo_nacional.mean(axis="columns").round(1)              # Promedio del promedio
 TT3_q0275_domingo_nacional = TT3_prom_domingo_nacional.quantile(0.0275, axis="columns").round(1)
 TT3_q975_domingo_nacional = TT3_prom_domingo_nacional.quantile(0.975, axis="columns").round(1)
 
@@ -295,10 +312,14 @@ TT3_q975_domingo_nacional = TT3_q975_domingo_nacional.reset_index()
 TT3_carga_nacional_dif = TT3_prom_col_domingo_nacional.merge(TT3_q0275_domingo_nacional, how="left", on="index")
 TT3_carga_nacional_dif = TT3_carga_nacional_dif.merge(TT3_q975_domingo_nacional, how="left", on="index")
 
-# TT3_carga_nacional_dif_colnames = TT3_carga_nacional_dif.rename(columns={"index": "domingo_semana", 0: "promedio"})    # Renombramos columnas
+TT3_carga_nacional_dif["region"] = 0
+TT3_carga_nacional_dif_rename = TT3_carga_nacional_dif.rename(columns={"index": "Domingo_semana"})    # Renombramos columnas
 
 ##########      EXPORTAMOS A .CSV     ##########
-TT3_carga_nacional_dif.to_csv(ruta_base_paso2 + f"carga_nacional_paso2_promedio_dif_{hoy}.csv", index=False)
+TT3_carga_nacional_dif_rename.to_csv(ruta_base_paso2 + f"carga_nacional_paso2_promedio_dif_{hoy}.csv", index=False)
+
+#### XLSX ####
+TT3_carga_nacional_dif_rename.to_excel(ruta_base_paso2 + "carga_nacional_prom_dif.xlsx", index=False)
 
 ##########################################################
 #####         DIFERENCIA DE PROMEDIOS REGIONAL       #####
@@ -330,6 +351,9 @@ TT33_carga_regional_dif =  TT33_carga_regional_dif.merge(TT33_q975_domingo_regio
 ##########      EXPORTAMOS A .CSV     ##########
 TT33_carga_regional_dif.to_csv(ruta_base_paso2 + f"carga_regional_paso2_promedio_dif_{hoy}.csv", index=False)
 
+#### XLSX ####
+TT33_carga_regional_dif.to_excel(ruta_base_paso2 + "carga_regional_prom_dif.xlsx", index=False)
+
 ########################################################################
 #####         PROMEDIO E INTERVALO NACIONAL - CARGA DESDE DO       #####
 ########################################################################
@@ -351,8 +375,13 @@ TT1_prom_col_domingo = TT1_prom_col_domingo.reset_index()
 TT1_carga_nacional =  TT1_prom_col_domingo.merge(TT1_q0275_domingo, how="left", on="Domingo_semana")
 TT1_carga_nacional =  TT1_carga_nacional.merge(TT1_q975_domingo, how="left", on="Domingo_semana")
 
+TT1_carga_nacional["region"] = 0
+
 ##########      EXPORTAMOS A .CSV     ##########
 TT1_carga_nacional.to_csv(ruta_base_paso2 + f"carga_nacional_paso2_promedio_{hoy}.csv", index=False)
+
+#### XLSX ####
+TT1_carga_nacional.to_excel(ruta_base_paso2 + "carga_nacional_prom.xlsx", index=False)
 
 ########################################################################
 #####         PROMEDIO E INTERVALO REGIONAL - CARGA DESDE DO       #####
@@ -376,3 +405,6 @@ TT1_carga_regional =  TT1_carga_regional.merge(TT1_q975_col_domingo_reg, how="le
 
 ##########      EXPORTAMOS A .CSV     ##########
 TT1_carga_regional.to_csv(ruta_base_paso2 + f"carga_regional_paso2_promedio_{hoy}.csv", index=False)
+
+#### XLSX ####
+TT1_carga_regional.to_excel(ruta_base_paso2 + "carga_regional_prom.xlsx", index=False)
