@@ -32,7 +32,7 @@ Donde **AAAAMMDDhhmmss** es un string con la fecha en formato año-mes-día-hora
 Primero hacer un git clone de este repo, y luego correr lo siguiente (para linux):
 
 ```bash
-python3 step_two.py
+bash icovid.sh
 ```
 
 # TO DO
