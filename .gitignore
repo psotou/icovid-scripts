@@ -1,4 +1,5 @@
 # local dirs and files to to be avoided
+backup/
 archivos-resumen/
 archivos-paso2/
 paso2.py
