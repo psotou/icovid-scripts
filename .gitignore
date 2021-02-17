@@ -1,7 +1,7 @@
 # local dirs and files to to be avoided
 backup/
-archivos-resumen/
-archivos-paso2/
+archivos-step-one/
+archivos-step-two/
 paso2.py
 resumen.py
 test.py
