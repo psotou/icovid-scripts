@@ -11,4 +11,4 @@ bash icovid.sh
 # TO DO
 
 + [ ] Hacer que los archivos generados se envíen de manera automática al google drive.
-+ [ ] Traspasar a Scala
++ [ ] Traspasar a JuliaLang
