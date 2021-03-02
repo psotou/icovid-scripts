@@ -43,3 +43,5 @@ else
   cp -r /home/pas/datagovuc/icovid/ICOVID/dimension3 /home/pas/python/icovid-scripts/backup/repo/${EXECUTIONDATEBACKUP};
   cp -r /home/pas/datagovuc/icovid/ICOVID/dimension4 /home/pas/python/icovid-scripts/backup/repo/${EXECUTIONDATEBACKUP};
 fi
+
+echo "[`(date +"F T")`] Proceso finalizado con éxito"
