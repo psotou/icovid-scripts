@@ -4,14 +4,21 @@ EXECUTIONDATE=`date +%Y%m%d%H%M`;   # YYYYMMDDHHmm
 EXECUTIONDATEBACKUP=`date +%d%m%Y`; # para los bakcups
 UNIXTIME=`date +%s`;                # genera unix time para diferencias las carpetas de backup cuando hay más de una generada por día
 
-echo "[`(date +"%F %T")`] Generamos las carpetas con la fecha en formato YYYYMMDDHHmm de acuerdo al momento de ejecución"
+echo "[`(date +"%F %T")`] Git pull al repo de ICOVID"
 
+cd /home/pas/datagovuc/icovid/ICOVID;
+git pull;
+
+echo "[`(date +"%F %T")`] Creación carpeta /archivos-step-one/${EXECUTIONDATE}/"
+echo "[`(date +"%F %T")`] Creación carpeta /archivos-step-two/${EXECUTIONDATE}/"
+
+cd /home/pas/python/icovid-scripts;
 mkdir /home/pas/python/icovid-scripts/archivos-step-one/${EXECUTIONDATE};
 mkdir /home/pas/python/icovid-scripts/archivos-step-two/${EXECUTIONDATE};
 
 echo "[`(date +"%F %T")`] Ejecutamos el py script que generas los archivos para el sitio ICOVID"
 
-python3 step_two.py ${EXECUTIONDATE};
+python3 step_two.py ${EXECUTIONDATE}
 
 echo "[`(date +"%F %T")`] Copiamos los archivos generados para el sitio ICOVID en la ruta /backup/generated/"
 
@@ -44,4 +51,4 @@ else
   cp -r /home/pas/datagovuc/icovid/ICOVID/dimension4 /home/pas/python/icovid-scripts/backup/repo/${EXECUTIONDATEBACKUP};
 fi
 
-echo "[`(date +"F T")`] Proceso finalizado con éxito"
+echo "[`(date +"%F %T")`] Proceso finalizado con éxito"
